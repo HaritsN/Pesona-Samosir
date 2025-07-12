@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <title>Peta Turpuk Sihotang - Pesona Samosir</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/linearicons.css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" />
+
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100vh;
+        z-index: 1;
+      }
+      .default-header {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+      }
+      .navbar {
+        background-color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar dari index.html -->
+    <header class="default-header">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+          <a class="navbar-brand" href="index.html">
+            <img src="img/logo.png" alt="Logo" width="45" height="60" />
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="text-white lnr lnr-menu"></span>
+          </button>
+
+          <div
+            class="collapse navbar-collapse justify-content-end align-items-center"
+            id="navbarSupportedContent"
+          >
+            <ul class="navbar-nav">
+              <li><a href="index.html#home">Home</a></li>
+              <li><a href="index.html#about">About</a></li>
+              <li><a href="index.html#secvice">Service</a></li>
+              <li><a href="index.html#gallery">Gallery</a></li>
+              <li><a href="index.html#faq">Faq</a></li>
+              <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Peta -->
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- jQuery & Bootstrap (Template Dependencies) -->
+    <script src="js/vendor/jquery-2.2.4.min.js"></script>
+    <script src="js/vendor/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+      // Basemap Layers
+      var osm = L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          attribution: "© OpenStreetMap",
+        }
+      );
+
+      var esriSat = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+          attribution: "© Esri",
+        }
+      );
+
+      var topo = L.tileLayer(
+        "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+        {
+          attribution: "© OpenTopoMap",
+        }
+      );
+
+      // Inisialisasi Peta
+      var map = L.map("map", {
+        center: [2.552425, 98.666042],
+        zoom: 13,
+        layers: [osm],
+      });
+
+      // Marker Lokasi Desa
+      L.marker([2.552425, 98.666042])
+        .addTo(map)
+        .bindPopup(
+          "<b>Desa Turpuk Sihotang</b><br>Kecamatan Harian, Kabupaten Samosir"
+        )
+        .openPopup();
+
+      // Event Click untuk menampilkan koordinat
+      map.on("click", function (e) {
+        L.popup()
+          .setLatLng(e.latlng)
+          .setContent(
+            "Koordinat: " +
+              e.latlng.lat.toFixed(6) +
+              ", " +
+              e.latlng.lng.toFixed(6)
+          )
+          .openOn(map);
+      });
+
+      // Layer Control
+      var baseMaps = {
+        OpenStreetMap: osm,
+        "Esri Satellite": esriSat,
+        OpenTopoMap: topo,
+      };
+      L.control.layers(baseMaps).addTo(map);
+    </script>
+  </body>
+</html>
